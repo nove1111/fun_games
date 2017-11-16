@@ -1,4 +1,3 @@
-
 /*
  * input:
  * 040873060
@@ -38,7 +37,7 @@ public:
     void pp(); //print puzzle.
     bool cal(); //calculate. return false if no answer.
 private:
-    int puzzle[LEN][LEN] = {{0}};
+    int puzzle[LEN][LEN] = {{0}}; //懒，就不用char了
     unsigned short horizontal[LEN] = {0}; //横
     unsigned short vertical[LEN] = {0}; //竖
     unsigned short block[LEN] = {0}; //块
@@ -54,18 +53,8 @@ private:
     bool valid(int x, int y, int v) { return h_valid(x,v) && v_valid(y,v) && b_valid(x,y,v); }
 };
 
-void Sudoku::pp()
-{
-    for (int i=0; i<LEN; ++i) {
-        for (int j=0; j<LEN; ++j)
-            cout << puzzle[i][j];
-        cout << endl;
-    }
-}
-
 Sudoku::Sudoku(char input[LEN][LEN])
 {
-    pp();
     for (int i=0; i<LEN; ++i) {
         for (int j=0; j<LEN; ++j) {
             int v = input[i][j] - '0';
@@ -75,13 +64,22 @@ Sudoku::Sudoku(char input[LEN][LEN])
     }
 }
 
+void Sudoku::pp()
+{
+    for (int i=0; i<LEN; ++i) {
+        for (int j=0; j<LEN; ++j)
+            cout << puzzle[i][j];
+        cout << endl;
+    }
+}
+
 bool Sudoku::cal()
 {
     for (int i=0; i<LEN; ++i) {
         for (int j=0; j<LEN; ++j) {
             //跳过已经有数字的
             if (puzzle[i][j]) continue;
-            
+
             //从1到9中选一个
             for (int v=1; v<=LEN; ++v) {
                 //横竖块不满足的跳过 
@@ -90,8 +88,7 @@ bool Sudoku::cal()
                 //设置
                 puzzle[i][j] = v;
                 h_set(i,v);v_set(j,v);b_set(i,j,v);
-                bool res = cal();
-                if (res)
+                if (cal())
                     return true;
                 else {
                     //失败了得把数字擦掉
@@ -103,7 +100,7 @@ bool Sudoku::cal()
             return false;
         }
     }
-    
+
     //全都有数字，返回成功
     return true;
 }
